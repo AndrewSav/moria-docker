@@ -1,4 +1,4 @@
-FROM golang:1.24.4-bookworm AS tools-builder
+FROM golang:1.25.4-trixie AS tools-builder
 
 COPY patcher patcher
 RUN go build -C patcher

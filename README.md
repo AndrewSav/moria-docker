@@ -5,7 +5,14 @@
 
 This is not an official project and I'm not affiliated with developers or publishers of the game. Head to https://www.returntomoria.com/news-updates/dedicated-server for official information / FAQ. Join the game Discord server at https://www.returntomoria.com/community to get help. This image is versioned separately and the image version is not in sync with either the game or the dedicated server.
 
-Checked that it's working with 1.5.3 on 25 June 2025.
+Checked that it's working with [1.6.2](https://www.returntomoria.com/news-updates/tu6-durins-folk-release-notes) on 19 November 2025.
+
+## Environment variables
+
+
+| Variable    | Description                                                  |
+| ----------- | ------------------------------------------------------------ |
+| SKIP_UPDATE | if provided, skips the Steam update process on container startup |
 
 ## Ports
 
@@ -25,7 +32,7 @@ In order for others to connect to your server you will most likely need to confi
 
 ## Starting the server
 
-In the folder containing `docker-compose.yaml` run
+In the folder containing `docker-compose.yml` run
 
 ```bash
 docker compose up -d --force-recreate
@@ -37,7 +44,7 @@ You can watch the logs with:
 docker compose logs -f
 ```
 
-*Note: this readme assumes that you are using supplied `docker-compose.yaml` to start the server. Some parts of this readme may be inaccurate if your settings differ from the provided.*
+*Note: this readme assumes that you are using supplied `docker-compose.yml` to start the server. Some parts of this readme may be inaccurate if your settings differ from the provided.*
 
 ## Accessing server console
 
@@ -76,6 +83,25 @@ Logs are found in `./server/Moria/Saved/Logs/` directory, and Saves are in `./se
 You can now connect to your server from the game (providing that the port forwarding is set up correctly).
 
 *Note: read the official notes linked at the top of this README, they will tell you how to set up a password, copy the game world from your single player playthrough and more*
+
+In order to convert the server world to Durin's Folk expansion, add these lines to `./server/MoriaServerConfig.ini` at the bottom of the `[World.Create]` section:
+
+```ini
+; Comma separated list of DLCs enabled which will be used when creating a new world.
+; Once DLC is enabled for a world, it cannot be disabled.
+; "DLC1,DLC2,DLC3" etc
+; By default this will always be populated with every possible DLC
+; If you wish to create new worlds with all possible DLCs enabled, leave this with default values.
+OptionalDLC.Array="DurinsFolk"
+
+; Comma separated list of DLCs to apply when upgrading worlds without them.
+; By default this will always be empty as upgraded worlds cannot go back.
+; Most commonly used when loading old worlds after new DLC content is released.
+; If you wish to upgrade your existing worlds to new DLC content please fill this in with OptionalDLC values above.
+UpgradeOptionalDLC.Array="DurinsFolk"
+```
+
+Once the server is converted to the expansion, players that do not have the expansion will no longer be able to join. This change is irreversible, so make a backup if in doubt.
 
 ## Connecting to the server
 
