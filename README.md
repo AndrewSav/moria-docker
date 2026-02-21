@@ -5,7 +5,7 @@
 
 This is not an official project and I'm not affiliated with developers or publishers of the game. Head to https://www.returntomoria.com/news-updates/dedicated-server for official information / FAQ. Join the game Discord server at https://www.returntomoria.com/community to get help. This image is versioned separately and the image version is not in sync with either the game or the dedicated server.
 
-Checked that it's working with [1.6.2](https://www.returntomoria.com/news-updates/tu6-durins-folk-release-notes) on 19 November 2025.
+Checked that it's working with [1.6.7](https://www.returntomoria.com/news-updates/patch-1-6-7-release-notes) on 21 February 2026.
 
 ## Environment variables
 
@@ -13,6 +13,7 @@ Checked that it's working with [1.6.2](https://www.returntomoria.com/news-update
 | Variable    | Description                                                  |
 | ----------- | ------------------------------------------------------------ |
 | SKIP_UPDATE | if provided, skips the Steam update process on container startup |
+| SERVER_WORKER_THREADS | See [here](https://www.returntomoria.com/news-updates/patch-1-6-7-release-notes) for the details. Sets `-NumServerWorkerThreads`. Defaults to 4. If provided can lower the default |
 
 ## Ports
 

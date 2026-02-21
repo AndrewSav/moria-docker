@@ -1,4 +1,4 @@
-FROM golang:1.25.4-trixie AS tools-builder
+FROM golang:1.26.0-trixie AS tools-builder
 
 COPY patcher patcher
 RUN go build -C patcher
@@ -23,7 +23,7 @@ RUN useradd -m steam && \
     chmod +x /usr/local/bin/winetricks && \
     apt-get update -y && \
     apt-get install -y --no-install-recommends steamcmd xvfb cabextract winehq-stable && \
-    winecfg && \
+    bash -c winecfg && \
     sleep 5 && \
     xvfb-run winetricks -q vcrun2022 && \
     rm -f /usr/local/bin/winetricks && \

@@ -15,10 +15,10 @@ if [ -z "$SKIP_UPDATE" ] || [ ! -f "/server/Moria/Binaries/Win64/MoriaServer-Win
         echo "[entrypoint] SKIP_UPDATE is set but server files are missing. Forcing update..."
     fi
     echo "[entrypoint] Updating Return To Moria Dedicated Server files with steamcmd..."
+    rm -rf /server/steamapps
     if ! (r=5; while ! /usr/bin/steamcmd +@sSteamCmdForcePlatformType windows +force_install_dir /server +login anonymous +app_update 3349480 validate +quit ; do
               ((--r)) || exit
               echo "[entrypoint] something went wrong, let's wait 5 seconds and retry"
-              rm -rf /server/steamapps
               sleep 5
           done) ; then
         echo "[entrypoint] failed updating with steamcmd!"
@@ -31,5 +31,5 @@ fi
 echo "[entrypoint] Patching subsystem in MoriaServer-Win64-Shipping.exe..."
 patcher /server/Moria/Binaries/Win64/MoriaServer-Win64-Shipping.exe
 
-echo "[entrypoint] Launching wine64 Return to Moria..."
-exec wine64 "/server/Moria/Binaries/Win64/MoriaServer-Win64-Shipping.exe" Moria 2>&1
+echo "[entrypoint] Launching wine Return to Moria..."
+exec wine "/server/Moria/Binaries/Win64/MoriaServer-Win64-Shipping.exe" Moria "-NumServerWorkerThreads=${SERVER_WORKER_THREADS:-4}" 2>&1
