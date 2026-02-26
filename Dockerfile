@@ -9,7 +9,7 @@ FROM ubuntu:24.04
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
-RUN useradd -m steam && \
+RUN userdel ubuntu && useradd -m -u 1000 steam && \
     echo steam steam/question select "I AGREE" | debconf-set-selections && \
     echo steam steam/license note '' | debconf-set-selections && \
     apt-get update && \
@@ -22,19 +22,23 @@ RUN useradd -m steam && \
     wget -O /usr/local/bin/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks && \
     chmod +x /usr/local/bin/winetricks && \
     apt-get update -y && \
-    apt-get install -y --no-install-recommends steamcmd xvfb cabextract winehq-stable && \
-    bash -c winecfg && \
+    apt-get install -y --no-install-recommends steamcmd xvfb cabextract winehq-stable gosu && \
+    mkdir /wineprefix-template && chown steam:steam /wineprefix-template && \
+    runuser -l steam -c "WINEPREFIX=/wineprefix-template winecfg" && \
     sleep 5 && \
-    xvfb-run winetricks -q vcrun2022 && \
+    runuser -l steam -c "WINEPREFIX=/wineprefix-template xvfb-run winetricks -q vcrun2022" && \
     rm -f /usr/local/bin/winetricks && \
     apt-get remove -y --purge wget xvfb cabextract software-properties-common && \
     apt-get clean autoclean && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
+RUN date -u +%Y%m%dT%H%M%SZ > /wineprefix-template/.timestamp
+
 RUN ln -s /usr/games/steamcmd /usr/bin/steamcmd
 
 VOLUME /server
+VOLUME /wineprefix-volume
 
 COPY --from=tools-builder /go/patcher/patcher /usr/local/bin/patcher
 COPY --from=tools-builder /go/healthcheck/healthcheck /usr/local/bin/healthcheck

@@ -4,8 +4,12 @@ services:
     container_name: moria
     restart: unless-stopped
     stop_signal: SIGINT # This is for graceful termination, do not change it, unless you know what you are doing
+    #environment:
+    #  - PUID=1001
+    #  - PGID=1001
     volumes:
       - './server:/server'
+    #  - './wineprefix:/wineprefix-volume'
     ports:
       - '7777:7777/udp'
     stdin_open: true # docker run -i, so we can issue commands to the console
