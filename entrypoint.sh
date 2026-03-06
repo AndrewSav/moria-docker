@@ -12,7 +12,7 @@ if [ "$(id -u)" = "0" ]; then
     # the image. Wine writes go to the container overlay layer, which works fine in practice.
     # If this ever becomes an issue, remove the PUID check to always use the volume path below.
     if [ "${PUID:-1000}" = "1000" ]; then
-        ln -s /wineprefix-template /home/steam/.wine
+        ln -sfn /wineprefix-template /home/steam/.wine
     else
         chown -R steam:steam /home/steam
         if [ "$(cat /wineprefix-volume/.timestamp 2>/dev/null)" != "$(cat /wineprefix-template/.timestamp)" ]; then
@@ -21,7 +21,7 @@ if [ "$(id -u)" = "0" ]; then
             cp -a /wineprefix-template/. /wineprefix-volume/
         fi
         chown -R steam:steam /wineprefix-volume
-        ln -s /wineprefix-volume /home/steam/.wine
+        ln -sfn /wineprefix-volume /home/steam/.wine
     fi
     exec gosu steam "$0" "$@"
 fi
