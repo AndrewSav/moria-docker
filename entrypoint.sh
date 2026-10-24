@@ -57,4 +57,4 @@ echo "[entrypoint] Patching subsystem in MoriaServer-Win64-Shipping.exe..."
 patcher /server/Moria/Binaries/Win64/MoriaServer-Win64-Shipping.exe
 
 echo "[entrypoint] Launching wine Return to Moria..."
-exec wine "/server/Moria/Binaries/Win64/MoriaServer-Win64-Shipping.exe" Moria "-NumServerWorkerThreads=${SERVER_WORKER_THREADS:-4}" 2>&1
+exec env WINEARCH=wow64 wine "/server/Moria/Binaries/Win64/MoriaServer-Win64-Shipping.exe" Moria "-NumServerWorkerThreads=${SERVER_WORKER_THREADS:-4}" 2>&1
