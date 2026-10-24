@@ -207,3 +207,7 @@ See [APPROACH.md](APPROACH.md)
 ## Credits
 
 - https://github.com/Theogalh/ReturnToMoriaServerOnLinuxTutorial
+
+## License
+
+[MIT](LICENSE)
