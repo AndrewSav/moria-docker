@@ -74,7 +74,7 @@ This may or may not work depending on your terminal, and on whether or not you a
 
 ## Server configuration
 
-Once the server has fully started for the first time it will copy the default server settings to `./server/MoriaServerConfig.ini`, `./server/MoriaServerPermissions.txt`, `./server/MoriaServerRules.txt` files.
+Once the container has fully started for the first time the server will copy the default server settings to `./server/MoriaServerConfig.ini`, `./server/MoriaServerPermissions.txt`, `./server/MoriaServerRules.txt` files and stops. The container keeps running, but the server won't host anything until you restart it.
 
 Edit the files to your liking and restart the containers:
 
