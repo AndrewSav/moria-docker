@@ -41,7 +41,7 @@ if [ -z "$SKIP_UPDATE" ] || [ ! -f "/server/Moria/Binaries/Win64/MoriaServer-Win
     fi
     echo "[entrypoint] Updating Return To Moria Dedicated Server files with steamcmd..."
     rm -rf /server/steamapps
-    if ! (r=5; while ! /usr/bin/steamcmd +@sSteamCmdForcePlatformType windows +force_install_dir /server +login anonymous +app_update 3349480 validate +quit ; do
+    if ! (r=5; while ! /usr/bin/steamcmd +@sSteamCmdForcePlatformType windows +force_install_dir /server +login anonymous +app_info_print 3349480 x +app_update 3349480 validate +quit ; do
               ((--r)) || exit
               echo "[entrypoint] something went wrong, let's wait 5 seconds and retry"
               sleep 5
