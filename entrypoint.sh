@@ -23,7 +23,8 @@ if [ "$(id -u)" = "0" ]; then
         chown -R steam:steam /wineprefix-volume
         ln -sfn /wineprefix-volume /home/steam/.wine
     fi
-    exec gosu steam "$0" "$@"
+    export HOME=/home/steam
+    exec setpriv --reuid=steam --regid=steam --init-groups "$0" "$@"
 fi
 
 # This block is here, so that we support attaching to console

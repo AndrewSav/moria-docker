@@ -1,4 +1,4 @@
-FROM golang:1.26.0-trixie AS tools-builder
+FROM golang:1.27.3-trixie AS tools-builder
 
 COPY patcher patcher
 RUN go build -C patcher
@@ -20,28 +20,20 @@ RUN userdel ubuntu && useradd -m -u 1000 steam && \
     wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key && \
     wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources && \
     apt-get update -y && \
-    apt-get install -y --no-install-recommends steamcmd cabextract wine-stable-amd64 gosu && \
+    apt-get install -y --no-install-recommends steamcmd wine-stable-amd64 && \
     cd /tmp && \
     apt-get download wine-stable=$(dpkg-query -Wf '${Version}' wine-stable-amd64) winehq-stable=$(dpkg-query -Wf '${Version}' wine-stable-amd64) && \
     dpkg-deb -x wine-stable_*.deb / && dpkg-deb -x winehq-stable_*.deb / && \
     mkdir /wineprefix-template && chown steam:steam /wineprefix-template && \
-    runuser -l steam -c "WINEPREFIX=/wineprefix-template wineboot --init && wineserver -w" && \
-    wget -O /tmp/vc_redist.x64.exe https://aka.ms/vs/17/release/vc_redist.x64.exe && \
-    cabextract -d /tmp/vc -F a12 /tmp/vc_redist.x64.exe && cabextract -d /tmp/vc /tmp/vc/a12 && \
-    printf 'REGEDIT4\n\n[HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides]\n' > /tmp/vc/overrides.reg && \
-    for f in /tmp/vc/*.dll_amd64; do \
-        b=$(basename "$f" .dll_amd64); \
-        install -o steam -g steam -m 644 "$f" "/wineprefix-template/drive_c/windows/system32/$b.dll"; \
-        printf '"*%s"="native,builtin"\n' "$b" >> /tmp/vc/overrides.reg; \
-    done && \
-    runuser -l steam -c "WINEPREFIX=/wineprefix-template wine regedit /S /tmp/vc/overrides.reg && wineserver -w" && \
+    runuser -l steam -c "export WINEPREFIX=/wineprefix-template; wineboot --init && wineserver -w" && \
+    test -s /wineprefix-template/system.reg && test -s /wineprefix-template/user.reg && \
     find /wineprefix-template -type f | while read -r f; do \
         for d in /opt/wine-stable/lib/wine/x86_64-windows /opt/wine-stable/share/wine/nls /opt/wine-stable/share/wine; do \
             t="$d/$(basename "$f")"; \
             if [ -f "$t" ] && cmp -s "$f" "$t"; then ln -f "$t" "$f"; break; fi; \
         done; \
     done && \
-    apt-get remove -y --purge wget cabextract && \
+    apt-get remove -y --purge wget && \
     apt-get clean autoclean && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /home/steam/.cache
